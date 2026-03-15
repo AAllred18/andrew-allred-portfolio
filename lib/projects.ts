@@ -2,6 +2,7 @@ import 'server-only';
 import { unstable_noStore as noStore } from 'next/cache';
 import { connectToDatabase } from './db';
 import { Project } from '@/models/Project';
+import { ProjectType } from '@/types/project';
 
 export async function getPublishedProjects() {
   noStore();
@@ -21,10 +22,15 @@ export async function getFeaturedProjects() {
   return Project.find({ published: true, featured: true }).sort({ createdAt: -1 }).limit(3).lean();
 }
 
-export async function getProjectBySlug(slug: string) {
+export async function getProjectBySlug(
+  slug: string
+): Promise<ProjectType | null> {
   noStore();
   await connectToDatabase();
-  return Project.findOne({ slug, published: true }).lean();
+
+  return Project.findOne({ slug, published: true })
+    .lean<ProjectType>()
+    .exec();
 }
 
 export async function getProjectById(id: string) {

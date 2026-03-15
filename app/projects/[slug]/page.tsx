@@ -64,8 +64,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           </div>
         </section>
 
-        <section className="mt-10 overflow-hidden rounded-[2rem]">
-          <div className="relative aspect-[16/8]">
+        <section className="mt-10 overflow-hidden rounded-4xl">
+          <div className="relative aspect-16/8">
             <Image src={project.featuredImage} alt={project.title} fill className="object-cover" />
           </div>
         </section>

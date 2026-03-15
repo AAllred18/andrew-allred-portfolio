@@ -30,7 +30,7 @@ export default function AdminLoginClient() {
 
   return (
     <main className="section-shell flex min-h-screen items-center justify-center py-12">
-      <form onSubmit={handleSubmit} className="glass w-full max-w-md rounded-[2rem] p-8">
+      <form onSubmit={handleSubmit} className="glass w-full max-w-md rounded-4xl p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Secure admin</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">Sign in</h1>
 

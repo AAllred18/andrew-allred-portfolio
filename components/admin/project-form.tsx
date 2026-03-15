@@ -35,6 +35,26 @@ const emptyProject = {
   published: false
 };
 
+function Field({
+  label,
+  children
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+const inputClassName =
+  'w-full rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-900/60 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:ring-blue-900/40';
+
 export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
   const router = useRouter();
   const [form, setForm] = useState<any>(initialValues || emptyProject);
@@ -45,103 +65,395 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
     [initialValues, mode]
   );
 
-  const update = (key: string, value: any) => setForm((current: any) => ({ ...current, [key]: value }));
+  const update = (key: string, value: any) =>
+    setForm((current: any) => ({ ...current, [key]: value }));
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
+
     const response = await fetch(endpoint, {
       method: mode === 'create' ? 'POST' : 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
     });
+
     setSaving(false);
-    if (response.ok) router.push('/admin');
+
+    if (response.ok) {
+      router.push('/admin');
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-10">
       <section className="glass rounded-3xl p-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <input value={form.title} onChange={(e) => update('title', e.target.value)} placeholder="Project title" className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-          <input value={form.slug} onChange={(e) => update('slug', e.target.value)} placeholder="slug" className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-          <input value={form.role} onChange={(e) => update('role', e.target.value)} placeholder="Role" className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-          <input value={form.projectType} onChange={(e) => update('projectType', e.target.value)} placeholder="Project type" className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-          <input value={form.timeline} onChange={(e) => update('timeline', e.target.value)} placeholder="Timeline" className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-          <input value={form.featuredImage} onChange={(e) => update('featuredImage', e.target.value)} placeholder="Featured image URL" className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            Project Basics
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Core project details used across cards, pages, and navigation.
+          </p>
         </div>
-        <textarea value={form.shortSummary} onChange={(e) => update('shortSummary', e.target.value)} placeholder="Short summary" rows={3} className="mt-4 w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-        <textarea value={form.fullDescription} onChange={(e) => update('fullDescription', e.target.value)} placeholder="Full description" rows={5} className="mt-4 w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Field label="Project Title">
+            <input
+              value={form.title}
+              onChange={(e) => update('title', e.target.value)}
+              placeholder="Project title"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Slug">
+            <input
+              value={form.slug}
+              onChange={(e) => update('slug', e.target.value)}
+              placeholder="project-slug"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Role">
+            <input
+              value={form.role}
+              onChange={(e) => update('role', e.target.value)}
+              placeholder="Frontend Developer"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Project Type">
+            <input
+              value={form.projectType}
+              onChange={(e) => update('projectType', e.target.value)}
+              placeholder="Web app, dashboard, client site..."
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Timeline">
+            <input
+              value={form.timeline}
+              onChange={(e) => update('timeline', e.target.value)}
+              placeholder="Spring 2025"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Featured Image URL">
+            <input
+              value={form.featuredImage}
+              onChange={(e) => update('featuredImage', e.target.value)}
+              placeholder="/images/projects/example/cover.png"
+              className={inputClassName}
+            />
+          </Field>
+        </div>
+
+        <div className="mt-6 space-y-6">
+          <Field label="Short Summary">
+            <textarea
+              value={form.shortSummary}
+              onChange={(e) => update('shortSummary', e.target.value)}
+              placeholder="Short summary shown on cards and project previews"
+              rows={3}
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Full Description">
+            <textarea
+              value={form.fullDescription}
+              onChange={(e) => update('fullDescription', e.target.value)}
+              placeholder="Longer overview of the project and its purpose"
+              rows={5}
+              className={inputClassName}
+            />
+          </Field>
+        </div>
       </section>
 
       <section className="glass rounded-3xl p-6">
-        <h3 className="text-lg font-semibold">Categories, tags, and publishing</h3>
-        <div className="mt-4 flex flex-wrap gap-3">
-          {PROJECT_CATEGORIES.map((category) => {
-            const active = form.categories.includes(category);
-            return (
-              <button
-                type="button"
-                key={category}
-                onClick={() => update('categories', active ? form.categories.filter((item: string) => item !== category) : [...form.categories, category])}
-                className={`rounded-full px-4 py-2 text-sm ${active ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950' : 'bg-slate-100 dark:bg-slate-900'}`}
-              >
-                {category}
-              </button>
-            );
-          })}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            Categories, Skills, and Publishing
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Control how the project is tagged and whether it appears publicly.
+          </p>
         </div>
-        <input value={form.skills.join(', ')} onChange={(e) => update('skills', e.target.value.split(',').map((item) => item.trim()).filter(Boolean))} placeholder="Skills, comma separated" className="mt-4 w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700" />
-        <div className="mt-4 flex flex-wrap gap-6 text-sm">
-          <label className="flex items-center gap-2"><input type="checkbox" checked={form.featured} onChange={(e) => update('featured', e.target.checked)} /> Featured</label>
-          <label className="flex items-center gap-2"><input type="checkbox" checked={form.published} onChange={(e) => update('published', e.target.checked)} /> Published</label>
+
+        <Field label="Categories">
+          <div className="flex flex-wrap gap-3">
+            {PROJECT_CATEGORIES.map((category) => {
+              const active = form.categories.includes(category);
+
+              return (
+                <button
+                  type="button"
+                  key={category}
+                  onClick={() =>
+                    update(
+                      'categories',
+                      active
+                        ? form.categories.filter((item: string) => item !== category)
+                        : [...form.categories, category]
+                    )
+                  }
+                  className={`rounded-full px-4 py-2 text-sm transition ${
+                    active
+                      ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
+          </div>
+        </Field>
+
+        <div className="mt-6">
+          <Field label="Skills">
+            <input
+              value={form.skills.join(', ')}
+              onChange={(e) =>
+                update(
+                  'skills',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                )
+              }
+              placeholder="React, TypeScript, MongoDB"
+              className={inputClassName}
+            />
+          </Field>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-8 text-sm">
+          <label className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+            <input
+              type="checkbox"
+              checked={form.featured}
+              onChange={(e) => update('featured', e.target.checked)}
+              className="h-4 w-4 rounded border-slate-300"
+            />
+            Featured project
+          </label>
+
+          <label className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+            <input
+              type="checkbox"
+              checked={form.published}
+              onChange={(e) => update('published', e.target.checked)}
+              className="h-4 w-4 rounded border-slate-300"
+            />
+            Published
+          </label>
         </div>
       </section>
 
       <section className="glass rounded-3xl p-6">
-        <h3 className="text-lg font-semibold">Case study content</h3>
-        {['problem', 'approach', 'implementation', 'results', 'lessons'].map((field) => (
-          <textarea
-            key={field}
-            value={form[field] || ''}
-            onChange={(e) => update(field, e.target.value)}
-            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-            rows={4}
-            className="mt-4 w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700"
-          />
-        ))}
-        {['galleryImages', 'outcomes', 'challenges', 'contributions', 'features'].map((field) => (
-          <input
-            key={field}
-            value={(form[field] || []).join(', ')}
-            onChange={(e) => update(field, e.target.value.split(',').map((item) => item.trim()).filter(Boolean))}
-            placeholder={`${field} (comma separated)`}
-            className="mt-4 w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700"
-          />
-        ))}
-        <input
-          value={(form.links || []).map((link: any) => `${link.label}|${link.url}`).join(', ')}
-          onChange={(e) =>
-            update(
-              'links',
-              e.target.value
-                .split(',')
-                .map((item) => item.trim())
-                .filter(Boolean)
-                .map((item) => {
-                  const [label, url] = item.split('|');
-                  return { label: label?.trim(), url: url?.trim() };
-                })
-            )
-          }
-          placeholder="Links as Label|URL, Label|URL"
-          className="mt-4 w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 dark:border-slate-700"
-        />
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            Case Study Content
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            These fields power the full project detail page.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <Field label="Problem">
+            <textarea
+              value={form.problem || ''}
+              onChange={(e) => update('problem', e.target.value)}
+              placeholder="What problem was this project solving?"
+              rows={4}
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Approach">
+            <textarea
+              value={form.approach || ''}
+              onChange={(e) => update('approach', e.target.value)}
+              placeholder="How did you approach the work?"
+              rows={4}
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Implementation">
+            <textarea
+              value={form.implementation || ''}
+              onChange={(e) => update('implementation', e.target.value)}
+              placeholder="What did you build or implement?"
+              rows={4}
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Results">
+            <textarea
+              value={form.results || ''}
+              onChange={(e) => update('results', e.target.value)}
+              placeholder="What outcomes or impact came from the project?"
+              rows={4}
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Lessons Learned">
+            <textarea
+              value={form.lessons || ''}
+              onChange={(e) => update('lessons', e.target.value)}
+              placeholder="What did you learn from the project?"
+              rows={4}
+              className={inputClassName}
+            />
+          </Field>
+        </div>
+      </section>
+
+      <section className="glass rounded-3xl p-6">
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            Supporting Lists and Media
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Add comma-separated lists for galleries, features, outcomes, and links.
+          </p>
+        </div>
+
+        <div className="grid gap-6">
+          <Field label="Gallery Images">
+            <input
+              value={(form.galleryImages || []).join(', ')}
+              onChange={(e) =>
+                update(
+                  'galleryImages',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                )
+              }
+              placeholder="/images/project/one.png, /images/project/two.png"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Outcomes">
+            <input
+              value={(form.outcomes || []).join(', ')}
+              onChange={(e) =>
+                update(
+                  'outcomes',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                )
+              }
+              placeholder="Improved usability, launched MVP, increased engagement"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Challenges">
+            <input
+              value={(form.challenges || []).join(', ')}
+              onChange={(e) =>
+                update(
+                  'challenges',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                )
+              }
+              placeholder="Tight timeline, data inconsistencies, design constraints"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Contributions">
+            <input
+              value={(form.contributions || []).join(', ')}
+              onChange={(e) =>
+                update(
+                  'contributions',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                )
+              }
+              placeholder="UI design, frontend development, analytics"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Features">
+            <input
+              value={(form.features || []).join(', ')}
+              onChange={(e) =>
+                update(
+                  'features',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                )
+              }
+              placeholder="Search, filtering, dashboards, authentication"
+              className={inputClassName}
+            />
+          </Field>
+
+          <Field label="Links">
+            <input
+              value={(form.links || []).map((link: any) => `${link.label}|${link.url}`).join(', ')}
+              onChange={(e) =>
+                update(
+                  'links',
+                  e.target.value
+                    .split(',')
+                    .map((item) => item.trim())
+                    .filter(Boolean)
+                    .map((item) => {
+                      const [label, url] = item.split('|');
+                      return { label: label?.trim(), url: url?.trim() };
+                    })
+                )
+              }
+              placeholder="Live Site|https://..., GitHub|https://..."
+              className={inputClassName}
+            />
+          </Field>
+        </div>
       </section>
 
       <div className="flex items-center justify-end gap-3">
-        <button type="button" onClick={() => router.push('/admin')} className="rounded-full border border-slate-300 px-5 py-3 text-sm font-medium dark:border-slate-700">Cancel</button>
-        <button type="submit" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white dark:bg-white dark:text-slate-950">
+        <button
+          type="button"
+          onClick={() => router.push('/admin')}
+          className="rounded-full border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-white dark:text-slate-950"
+        >
           {saving ? 'Saving...' : mode === 'create' ? 'Create project' : 'Update project'}
         </button>
       </div>

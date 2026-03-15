@@ -29,10 +29,14 @@ const ProjectSchema = new Schema(
       }
     ],
     featured: { type: Boolean, default: false },
-    published: { type: Boolean, default: false }
+    published: { type: Boolean, default: false },
+
+    // new
+    order: { type: Number, default: 0 }
   },
   { timestamps: true }
 );
 
 export type ProjectDocument = InferSchemaType<typeof ProjectSchema> & { _id: string };
-export const Project = mongoose.models.Project || mongoose.model('Project', ProjectSchema);
+export const Project =
+  mongoose.models.Project || mongoose.model('Project', ProjectSchema);

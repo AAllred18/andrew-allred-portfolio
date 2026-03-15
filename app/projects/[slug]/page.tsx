@@ -39,6 +39,15 @@ export default async function ProjectDetailPage({
 
   const related = await getRelatedProjects(project.categories, project.slug);
 
+  const descriptionSections: [string, string | undefined][] = [
+    ['Project overview', project.fullDescription],
+    ['Problem', project.problem],
+    ['Approach / process', project.approach],
+    ['Implementation details', project.implementation],
+    ['Results / outcomes', project.results],
+    ['Lessons learned', project.lessons],
+  ];
+
   return (
     <div>
       <SiteHeader />
@@ -125,33 +134,13 @@ export default async function ProjectDetailPage({
         </section>
 
         <section className="mt-16 grid gap-6 md:grid-cols-2">
-          {[
-            ['Project overview', project.fullDescription],
-            ['Problem', project.problem],
-            ['Approach / process', project.approach],
-            ['Implementation details', project.implementation],
-            ['Results / outcomes', project.results],
-            ['Lessons learned', project.lessons]
-          ].map(([title, copy]) => (
+          {descriptionSections.map(([title, copy]) => (
             <div key={title} className="glass rounded-3xl p-6">
               <h2 className="text-xl font-semibold">{title}</h2>
-              <p className="mt-3 leading-7 text-slate-600 dark:text-slate-300">{copy}</p>
-            </div>
-          ))}
 
-          {[
-            ['Key features', project.features],
-            ['Challenges', project.challenges],
-            ['My contributions', project.contributions],
-            ['Key outcomes / impact', project.outcomes]
-          ].map(([title, items]) => (
-            <div key={title} className="glass rounded-3xl p-6">
-              <h2 className="text-xl font-semibold">{title}</h2>
-              <ul className="mt-4 space-y-3 text-slate-600 dark:text-slate-300">
-                {(items as string[] | undefined)?.map((item: string) => (
-                  <li key={item}>• {item}</li>
-                ))}
-              </ul>
+              <p className="mt-3 leading-7 text-slate-600 dark:text-slate-300">
+                {copy}
+              </p>
             </div>
           ))}
         </section>

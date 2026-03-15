@@ -1,5 +1,7 @@
-export { default } from 'next-auth/middleware';
+import nextAuthMiddleware from "next-auth/middleware";
+
+export default nextAuthMiddleware;
 
 export const config = {
-  matcher: ['/admin', '/admin/projects/:path*']
+  matcher: ["/admin", "/admin/projects/:path*"],
 };

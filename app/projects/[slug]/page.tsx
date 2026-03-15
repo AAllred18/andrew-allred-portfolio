@@ -7,20 +7,30 @@ import { SiteHeader } from '@/components/layout/site-header';
 import { ProjectCard } from '@/components/projects/project-card';
 import { getProjectBySlug, getRelatedProjects } from '@/lib/projects';
 import { ProjectGallery } from '@/components/projects/project-gallery';
+import type { ProjectType } from '@/types/project';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+export async function generateMetadata({
+  params
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const project = (await getProjectBySlug(params.slug)) as ProjectType | null;
+
   if (!project) return {};
+
   return {
     title: project.title,
     description: project.shortSummary
   };
 }
 
-export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const project: any = await getProjectBySlug(slug);
+export default async function ProjectDetailPage({
+  params
+}: {
+  params: { slug: string };
+}) {
+  const project = (await getProjectBySlug(params.slug)) as ProjectType | null;
+
   if (!project) notFound();
 
   const related = await getRelatedProjects(project.categories, project.slug);
@@ -29,34 +39,68 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     <div>
       <SiteHeader />
       <main className="section-shell py-10">
-        <Link href="/#projects" className="text-sm font-medium text-blue-600">← Back to all projects</Link>
+        <Link href="/#projects" className="text-sm font-medium text-blue-600">
+          ← Back to all projects
+        </Link>
+
         <section className="mt-8 grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-end">
           <div>
             <div className="flex flex-wrap gap-2">
               {project.categories.map((category: string) => (
-                <span key={category} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium dark:bg-white/10">{category}</span>
+                <span
+                  key={category}
+                  className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium dark:bg-white/10"
+                >
+                  {category}
+                </span>
               ))}
             </div>
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">{project.title}</h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">{project.shortSummary}</p>
+
+            <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">
+              {project.title}
+            </h1>
+
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+              {project.shortSummary}
+            </p>
+
             <div className="mt-6 flex flex-wrap gap-3">
-              {project.links?.map((link: any) => (
-                <a key={link.url} href={link.url} className="flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-900 hover:bg-slate-900 hover:text-white hover:shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900">
+              {project.links?.map((link) => (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  className="flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-900 hover:bg-slate-900 hover:text-white hover:shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900"
+                >
                   {link.label}
                 </a>
               ))}
             </div>
           </div>
+
           <div className="glass rounded-3xl p-6">
             <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300">
-              <div><span className="font-semibold text-slate-900 dark:text-white">Role:</span> {project.role}</div>
-              <div><span className="font-semibold text-slate-900 dark:text-white">Type:</span> {project.projectType}</div>
-              <div><span className="font-semibold text-slate-900 dark:text-white">Timeline:</span> {project.timeline}</div>
+              <div>
+                <span className="font-semibold text-slate-900 dark:text-white">Role:</span>{' '}
+                {project.role}
+              </div>
+              <div>
+                <span className="font-semibold text-slate-900 dark:text-white">Type:</span>{' '}
+                {project.projectType}
+              </div>
+              <div>
+                <span className="font-semibold text-slate-900 dark:text-white">Timeline:</span>{' '}
+                {project.timeline}
+              </div>
               <div>
                 <span className="font-semibold text-slate-900 dark:text-white">Stack:</span>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {project.skills.map((skill: string) => (
-                    <span key={skill} className="rounded-full bg-slate-100 px-3 py-1 text-xs dark:bg-white/10">{skill}</span>
+                    <span
+                      key={skill}
+                      className="rounded-full bg-slate-100 px-3 py-1 text-xs dark:bg-white/10"
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -65,8 +109,14 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         </section>
 
         <section className="mt-10 overflow-hidden rounded-4xl">
-          <div className="relative aspect-16/8">
-            <Image src={project.featuredImage} alt={project.title} fill className="object-cover" />
+          <div className="relative aspect-[16/8]">
+            <Image
+              src={project.featuredImage}
+              alt={project.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 80vw"
+              className="object-cover"
+            />
           </div>
         </section>
 
@@ -90,11 +140,11 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             ['Challenges', project.challenges],
             ['My contributions', project.contributions],
             ['Key outcomes / impact', project.outcomes]
-          ].map(([title, items]: any) => (
+          ].map(([title, items]) => (
             <div key={title} className="glass rounded-3xl p-6">
               <h2 className="text-xl font-semibold">{title}</h2>
               <ul className="mt-4 space-y-3 text-slate-600 dark:text-slate-300">
-                {items?.map((item: string) => (
+                {(items as string[] | undefined)?.map((item: string) => (
                   <li key={item}>• {item}</li>
                 ))}
               </ul>
@@ -102,11 +152,16 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           ))}
         </section>
 
-        {project.galleryImages?.length > 0 && (
+        {(project.galleryImages?.length ?? 0) > 0 && (
           <section className="mt-20">
             <h2 className="section-title py-5">Gallery</h2>
             <ProjectGallery
-              photos={[project.featuredImage, ...(project.galleryImages ?? [])]}
+              photos={[
+                project.featuredImage,
+                ...(project.galleryImages ?? []).filter(
+                  (image) => image !== project.featuredImage
+                )
+              ]}
             />
           </section>
         )}
@@ -115,7 +170,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <section className="mt-20">
             <h2 className="section-title">Related projects</h2>
             <div className="mt-8 grid gap-6 lg:grid-cols-3">
-              {related.map((item: any) => <ProjectCard key={item._id} project={item} />)}
+              {related.map((item: any) => (
+              <ProjectCard key={item._id} project={item} />
+            ))}
             </div>
           </section>
         )}

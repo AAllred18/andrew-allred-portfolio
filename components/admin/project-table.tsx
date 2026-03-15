@@ -181,6 +181,8 @@ export function ProjectTable({ projects: initialProjects }: { projects: any[] })
                   <div className="flex flex-wrap gap-2">
                     <Link
                       href={`/projects/${project.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
                     >
                       View

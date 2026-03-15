@@ -10,26 +10,30 @@ import { ProjectGallery } from '@/components/projects/project-gallery';
 import type { ProjectType } from '@/types/project';
 
 export async function generateMetadata({
-  params
+  params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const project = (await getProjectBySlug(params.slug)) as ProjectType | null;
+  const { slug } = await params;
+
+  const project = (await getProjectBySlug(slug)) as ProjectType | null;
 
   if (!project) return {};
 
   return {
     title: project.title,
-    description: project.shortSummary
+    description: project.shortSummary,
   };
 }
 
 export default async function ProjectDetailPage({
-  params
+  params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const project = (await getProjectBySlug(params.slug)) as ProjectType | null;
+  const { slug } = await params;
+
+  const project = (await getProjectBySlug(slug)) as ProjectType | null;
 
   if (!project) notFound();
 
@@ -109,7 +113,7 @@ export default async function ProjectDetailPage({
         </section>
 
         <section className="mt-10 overflow-hidden rounded-4xl">
-          <div className="relative aspect-[16/8]">
+          <div className="relative aspect-16/8">
             <Image
               src={project.featuredImage}
               alt={project.title}

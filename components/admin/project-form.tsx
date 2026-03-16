@@ -32,7 +32,8 @@ const emptyProject = {
   lessons: '',
   links: [],
   featured: false,
-  published: false
+  published: false,
+  status: 'draft'
 };
 
 function Field({
@@ -72,10 +73,15 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
     event.preventDefault();
     setSaving(true);
 
+    const payload = {
+      ...form,
+      published: form.status === 'published'
+    };
+
     const response = await fetch(endpoint, {
       method: mode === 'create' ? 'POST' : 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
+      body: JSON.stringify(payload)
     });
 
     setSaving(false);
@@ -189,7 +195,7 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
         <Field label="Categories">
           <div className="flex flex-wrap gap-3">
             {PROJECT_CATEGORIES.map((category) => {
-              const active = form.categories.includes(category);
+              const active = (form.categories || []).includes(category);
 
               return (
                 <button
@@ -216,10 +222,23 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
           </div>
         </Field>
 
-        <div className="mt-6">
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <Field label="Project Status">
+            <select
+              value={form.status || 'draft'}
+              onChange={(e) => update('status', e.target.value)}
+              className={inputClassName}
+            >
+              <option value="draft">Draft</option>
+              <option value="in-progress">In Progress</option>
+              <option value="review">Ready for Review</option>
+              <option value="published">Published</option>
+            </select>
+          </Field>
+
           <Field label="Skills">
             <input
-              value={form.skills.join(', ')}
+              value={(form.skills || []).join(', ')}
               onChange={(e) =>
                 update(
                   'skills',
@@ -244,16 +263,6 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
               className="h-4 w-4 rounded border-slate-300"
             />
             Featured project
-          </label>
-
-          <label className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
-            <input
-              type="checkbox"
-              checked={form.published}
-              onChange={(e) => update('published', e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300"
-            />
-            Published
           </label>
         </div>
       </section>

@@ -4,6 +4,34 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+function getStatusStyles(status: string) {
+  switch (status) {
+    case 'published':
+      return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300';
+    case 'in-progress':
+      return 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300';
+    case 'review':
+      return 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300';
+    case 'draft':
+    default:
+      return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
+  }
+}
+
+function formatStatus(status: string) {
+  switch (status) {
+    case 'in-progress':
+      return 'In Progress';
+    case 'review':
+      return 'Review';
+    case 'published':
+      return 'Published';
+    case 'draft':
+    default:
+      return 'Draft';
+  }
+}
+
 export function ProjectTable({ projects: initialProjects }: { projects: any[] }) {
   const router = useRouter();
   const [projects, setProjects] = useState(
@@ -121,7 +149,7 @@ export function ProjectTable({ projects: initialProjects }: { projects: any[] })
 
                 <td className="px-6 py-4">
                   <div className="flex flex-wrap gap-2">
-                    {project.categories.map((category: string) => (
+                    {(project.categories || []).map((category: string) => (
                       <span
                         key={category}
                         className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300"
@@ -135,13 +163,11 @@ export function ProjectTable({ projects: initialProjects }: { projects: any[] })
                 <td className="px-6 py-4">
                   <div className="flex flex-wrap gap-2">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        project.published
-                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300'
-                          : 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300'
-                      }`}
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyles(
+                        project.status || 'draft'
+                      )}`}
                     >
-                      {project.published ? 'Published' : 'Draft'}
+                      {formatStatus(project.status || 'draft')}
                     </span>
 
                     <span
@@ -179,14 +205,20 @@ export function ProjectTable({ projects: initialProjects }: { projects: any[] })
 
                 <td className="px-6 py-4">
                   <div className="flex flex-wrap gap-2">
-                    <Link
-                      href={`/projects/${project.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
-                    >
-                      View
-                    </Link>
+                    {project.status === 'published' ? (
+                      <Link
+                        href={`/projects/${project.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
+                      >
+                        View
+                      </Link>
+                    ) : (
+                      <span className="rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-400 dark:border-slate-800 dark:text-slate-500">
+                        Not public
+                      </span>
+                    )}
 
                     <Link
                       href={`/admin/projects/${project._id}/edit`}

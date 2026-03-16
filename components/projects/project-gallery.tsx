@@ -46,8 +46,8 @@ export function ProjectGallery({
 
   return (
     <>
-      <div className="glass relative overflow-hidden rounded-[2rem] p-4 shadow-2xl">
-        <div className="relative h-[420px] w-full overflow-hidden rounded-[1.5rem] bg-slate-40 dark:bg-slate-900">
+      <div className="glass relative overflow-hidden rounded-4xl p-4 shadow-2xl">
+        <div className="relative h-105 w-full overflow-hidden rounded-3xl bg-slate-40 dark:bg-slate-900">
           {photos.map((photo, index) => (
             <button
               key={photo}
@@ -103,7 +103,7 @@ export function ProjectGallery({
 
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-4"
           onClick={() => setLightboxOpen(false)}
           role="dialog"
           aria-modal="true"

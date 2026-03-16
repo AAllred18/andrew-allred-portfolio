@@ -91,7 +91,7 @@ export default async function HomePage() {
     <div>
       <SiteHeader />
       <main>
-        <section className="section-shell grid min-h-[calc(100vh-4rem)] items-center gap-10 py-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="section-shell grid items-center gap-8 py-6 sm:py-8 lg:min-h-[calc(100vh-4rem)] lg:py-10 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="order-2 lg:order-1">
             <p className="mb-4 text-sm mt-6 font-semibold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-300">
               Full-Stack Developer · UX Designer · Analyst
@@ -118,7 +118,9 @@ export default async function HomePage() {
           </div>
 
           <div className="order-1 flex items-center justify-center lg:order-2">
-            <HeroArtTilt />
+            <div className="w-[85%] max-w-90 sm:max-w-105 lg:max-w-none">
+              <HeroArtTilt />
+            </div>
           </div>
 
           {/* <div className="glass rounded-[2rem] p-6 shadow-xl">

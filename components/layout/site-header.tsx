@@ -102,7 +102,15 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#1D5491] bg-[#1D5491]/95 text-white backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
       <div className="section-shell flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="text-sm font-semibold tracking-[0.24em] text-white/95">
+        <Link
+          href="/"
+          onClick={() => {
+            if (pathname === '/') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          className="text-sm font-semibold tracking-[0.24em] text-white/95"
+        >
           ANDREW ALLRED
         </Link>
 

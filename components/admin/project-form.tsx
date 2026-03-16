@@ -63,6 +63,9 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
   const [skillsInput, setSkillsInput] = useState(
     (initialValues?.skills || emptyProject.skills).join(', ')
   );
+  const [galleryImagesInput, setGalleryImagesInput] = useState(
+  (initialValues?.galleryImages || emptyProject.galleryImages).join(', ')
+);
 
   const endpoint = useMemo(
     () => (mode === 'create' ? '/api/projects' : `/api/projects/${initialValues._id}`),
@@ -360,17 +363,20 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
         <div className="grid gap-6">
           <Field label="Gallery Images">
             <input
-              value={(form.galleryImages || []).join(', ')}
-              onChange={(e) =>
+              value={galleryImagesInput}
+              onChange={(e) => {
+                const value = e.target.value;
+                setGalleryImagesInput(value);
+
                 update(
                   'galleryImages',
-                  e.target.value
+                  value
                     .split(',')
                     .map((item) => item.trim())
                     .filter(Boolean)
-                )
-              }
-              placeholder="/images/project/one.png, /images/project/two.png"
+                );
+              }}
+              placeholder="/images/project/one.png, /images/project/two.gif"
               className={inputClassName}
             />
           </Field>

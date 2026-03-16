@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 type ProjectGalleryProps = {
   photos?: string[];
@@ -15,15 +16,13 @@ export function ProjectGallery({
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  useEffect(() => {
-    if (photos.length <= 1 || lightboxOpen) return;
+  const goToNext = () => {
+    setActiveIndex((prev) => (prev + 1) % photos.length);
+  };
 
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % photos.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [photos.length, lightboxOpen]);
+  const goToPrevious = () => {
+    setActiveIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  };
 
   useEffect(() => {
     if (!lightboxOpen) return;
@@ -33,16 +32,18 @@ export function ProjectGallery({
         setLightboxOpen(false);
       }
       if (event.key === 'ArrowRight') {
-        setActiveIndex((prev) => (prev + 1) % photos.length);
+        goToNext();
       }
       if (event.key === 'ArrowLeft') {
-        setActiveIndex((prev) => (prev - 1 + photos.length) % photos.length);
+        goToPrevious();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxOpen, photos.length]);
+
+  if (!photos.length) return null;
 
   return (
     <>
@@ -58,8 +59,8 @@ export function ProjectGallery({
               }}
               className={`absolute inset-0 transition-all duration-700 ${
                 index === activeIndex
-                  ? 'z-10 opacity-100 scale-100'
-                  : 'pointer-events-none z-0 opacity-0 scale-[1.02]'
+                  ? 'z-10 scale-100 opacity-100'
+                  : 'pointer-events-none z-0 scale-[1.02] opacity-0'
               }`}
               aria-label={`Open ${altPrefix} ${index + 1}`}
             >
@@ -72,6 +73,34 @@ export function ProjectGallery({
               />
             </button>
           ))}
+
+          {photos.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToPrevious();
+                }}
+                aria-label="Previous image"
+                className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/80 text-slate-900 shadow backdrop-blur-md transition hover:bg-white"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToNext();
+                }}
+                aria-label="Next image"
+                className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/80 text-slate-900 shadow backdrop-blur-md transition hover:bg-white"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
+          )}
         </div>
 
         {photos.length > 1 && (
@@ -124,24 +153,20 @@ export function ProjectGallery({
               <>
                 <button
                   type="button"
-                  onClick={() =>
-                    setActiveIndex((prev) => (prev - 1 + photos.length) % photos.length)
-                  }
-                  className="absolute left-2 z-20 rounded-full bg-white/90 px-4 py-3 text-lg font-semibold text-slate-900 shadow hover:bg-white"
+                  onClick={goToPrevious}
+                  className="absolute left-2 z-20 rounded-full bg-white/90 p-3 text-slate-900 shadow hover:bg-white"
                   aria-label="Previous image"
                 >
-                  ‹
+                  <ChevronLeft className="h-5 w-5" />
                 </button>
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setActiveIndex((prev) => (prev + 1) % photos.length)
-                  }
-                  className="absolute right-2 z-20 rounded-full bg-white/90 px-4 py-3 text-lg font-semibold text-slate-900 shadow hover:bg-white"
+                  onClick={goToNext}
+                  className="absolute right-2 z-20 rounded-full bg-white/90 p-3 text-slate-900 shadow hover:bg-white"
                   aria-label="Next image"
                 >
-                  ›
+                  <ChevronRight className="h-5 w-5" />
                 </button>
               </>
             )}

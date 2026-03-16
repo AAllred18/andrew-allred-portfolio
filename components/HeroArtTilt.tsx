@@ -11,7 +11,7 @@ export function HeroArtTilt() {
       tiltMaxAngleY={10}
       scale={1.01}
       glareEnable={false}
-      className="relative mx-auto flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72 md:h-[22rem] md:w-[22rem] lg:h-[26rem] lg:w-[26rem]"
+      className="relative mx-auto flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72 md:h-88 md:w-88 lg:h-104 lg:w-104"
     >
       <div className="absolute h-36 w-36 rounded-full bg-blue-500/25 blur-3xl sm:h-48 sm:w-48 md:h-64 md:w-64" />
       <div className="absolute h-44 w-44 rounded-full bg-cyan-400/15 blur-3xl sm:h-60 sm:w-60 md:h-80 md:w-80" />
@@ -53,7 +53,7 @@ export function HeroArtTilt() {
             alt="AR monogram"
             fill
             priority
-            sizes="(max-width: 640px) 192px, (max-width: 768px) 240px, (max-width: 1024px) 320px, 352px"
+            sizes="(max-width: 640px) 192px, (max-width: 768px) 240px, (max-width: 1024px) 320px, 352px"  
             className="object-contain"
           />
         </div>

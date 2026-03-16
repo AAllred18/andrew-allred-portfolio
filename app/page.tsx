@@ -155,7 +155,7 @@ export default async function HomePage() {
           <div className="flex items-end justify-between gap-6">
             <div>
               <h2 className="section-title">Featured work</h2>
-              <p className="section-copy">A quick look at selected projects that combine execution quality with thoughtful problem solving.</p>
+              <p className="section-copy">A selection of projects that highlight my work across development, UX design, and data-driven problem solving.</p>
             </div>
             <Link href="#projects" className="hidden text-sm font-medium text-blue-600 sm:inline-flex">
               Browse all work
@@ -170,7 +170,7 @@ export default async function HomePage() {
 
         <section id="projects" className="section-shell py-15 scroll-mt-5">
           <h2 className="section-title">Projects</h2>
-          <p className="section-copy">Filter work by development, analysis, or UX design. Recruiters can quickly see range without losing cohesion.</p>
+          <p className="section-copy">A collection of projects where I’ve explored building products, designing experiences, and working with data.</p>
           <div className="mt-10">
             <FilterableProjectGrid projects={JSON.parse(JSON.stringify(allProjects))} />
           </div>
@@ -178,6 +178,9 @@ export default async function HomePage() {
 
         <section id="skills" className="section-shell py-15 scroll-mt-5">
           <h2 className="section-title">Skills</h2>
+          <p className="section-copy">
+            Tools and technologies I use to turn ideas into thoughtful, well-built products.
+          </p>
           <div className="mt-10 grid gap-6 lg:grid-cols-4">
             {Object.entries(skills).map(([group, values]) => (
               <div key={group} className="glass rounded-3xl p-6">

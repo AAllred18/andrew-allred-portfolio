@@ -1,22 +1,29 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { PROJECT_CATEGORIES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { ProjectCard } from './project-card';
+
+const PROJECTS_PER_PAGE = 3;
 
 export function FilterableProjectGrid({ projects }: { projects: any[] }) {
   const [selected, setSelected] = useState<string[]>([...PROJECT_CATEGORIES]);
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'Newest' | 'Featured'>('Featured');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = useMemo(() => {
     const results = projects.filter((project) => {
-      const matchesCategory = project.categories.some((category: string) => selected.includes(category));
-      const haystack = `${project.title} ${project.shortSummary} ${project.skills.join(' ')}`.toLowerCase();
+      const matchesCategory = project.categories.some((category: string) =>
+        selected.includes(category)
+      );
+      const haystack =
+        `${project.title} ${project.shortSummary} ${project.skills.join(' ')}`.toLowerCase();
       const matchesQuery = haystack.includes(query.toLowerCase());
+
       return matchesCategory && matchesQuery;
     });
 
@@ -26,9 +33,28 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
     });
   }, [projects, query, selected, sort]);
 
+  const totalPages = Math.ceil(filtered.length / PROJECTS_PER_PAGE);
+
+  const paginatedProjects = useMemo(() => {
+    const start = (currentPage - 1) * PROJECTS_PER_PAGE;
+    return filtered.slice(start, start + PROJECTS_PER_PAGE);
+  }, [filtered, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selected, query, sort]);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   const toggle = (value: string) => {
     setSelected((current) =>
-      current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
+      current.includes(value)
+        ? current.filter((item) => item !== value)
+        : [...current, value]
     );
   };
 
@@ -54,10 +80,19 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
                 </button>
               );
             })}
-            <button onClick={() => setSelected([...PROJECT_CATEGORIES])} className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium dark:border-slate-700">
+            <button
+              onClick={() => {
+                setSelected([...PROJECT_CATEGORIES]);
+                setQuery('');
+                setSort('Featured');
+                setCurrentPage(1);
+              }}
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium dark:border-slate-700"
+            >
               Clear filters
             </button>
           </div>
+
           <div className="flex flex-col gap-3 sm:flex-row">
             <label className="glass flex items-center gap-2 rounded-full px-4 py-2">
               <Search className="h-4 w-4 text-slate-400" />
@@ -68,6 +103,7 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
                 onChange={(event) => setQuery(event.target.value)}
               />
             </label>
+
             <select
               value={sort}
               onChange={(event) => setSort(event.target.value as 'Newest' | 'Featured')}
@@ -85,21 +121,49 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
           No projects match your current filters. Try resetting or broadening the search.
         </div>
       ) : (
-        <motion.div layout className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          <AnimatePresence>
-            {filtered.map((project) => (
-              <motion.div
-                layout
-                key={project._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
+        <>
+          <motion.div layout className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <AnimatePresence mode="wait">
+              {paginatedProjects.map((project) => (
+                <motion.div
+                  layout
+                  key={project._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                >
+                  <ProjectCard project={project} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 pt-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="glass rounded-full p-3 transition disabled:cursor-not-allowed disabled:opacity-40"
+                aria-label="Previous projects"
               >
-                <ProjectCard project={project} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Page {currentPage} of {totalPages}
+              </p>
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="glass rounded-full p-3 transition disabled:cursor-not-allowed disabled:opacity-40"
+                aria-label="Next projects"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

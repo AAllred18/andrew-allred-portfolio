@@ -7,13 +7,23 @@ import { PROJECT_CATEGORIES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { ProjectCard } from './project-card';
 
-const PROJECTS_PER_PAGE = 3;
-
 export function FilterableProjectGrid({ projects }: { projects: any[] }) {
   const [selected, setSelected] = useState<string[]>([...PROJECT_CATEGORIES]);
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'Newest' | 'Featured'>('Featured');
   const [currentPage, setCurrentPage] = useState(1);
+  const [projectsPerPage, setProjectsPerPage] = useState(1);
+
+  useEffect(() => {
+    const updateProjectsPerPage = () => {
+      setProjectsPerPage(window.innerWidth >= 768 ? 3 : 1);
+    };
+
+    updateProjectsPerPage();
+    window.addEventListener('resize', updateProjectsPerPage);
+
+    return () => window.removeEventListener('resize', updateProjectsPerPage);
+  }, []);
 
   const filtered = useMemo(() => {
     const results = projects.filter((project) => {
@@ -33,16 +43,16 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
     });
   }, [projects, query, selected, sort]);
 
-  const totalPages = Math.ceil(filtered.length / PROJECTS_PER_PAGE);
+  const totalPages = Math.ceil(filtered.length / projectsPerPage);
 
   const paginatedProjects = useMemo(() => {
-    const start = (currentPage - 1) * PROJECTS_PER_PAGE;
-    return filtered.slice(start, start + PROJECTS_PER_PAGE);
-  }, [filtered, currentPage]);
+    const start = (currentPage - 1) * projectsPerPage;
+    return filtered.slice(start, start + projectsPerPage);
+  }, [filtered, currentPage, projectsPerPage]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selected, query, sort]);
+  }, [selected, query, sort, projectsPerPage]);
 
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
@@ -81,16 +91,16 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
               );
             })}
             <button
-            onClick={() => {
-              setSelected([...PROJECT_CATEGORIES]);
-              setQuery('');
-              setSort('Featured');
-              setCurrentPage(1);
-            }}
-            className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium dark:border-slate-700"
-          >
-            Clear filters
-          </button>
+              onClick={() => {
+                setSelected([]);
+                setQuery('');
+                setSort('Featured');
+                setCurrentPage(1);
+              }}
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium dark:border-slate-700"
+            >
+              Clear filters
+            </button>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">

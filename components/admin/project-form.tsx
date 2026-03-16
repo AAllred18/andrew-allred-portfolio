@@ -60,6 +60,9 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
   const router = useRouter();
   const [form, setForm] = useState<any>(initialValues || emptyProject);
   const [saving, setSaving] = useState(false);
+  const [skillsInput, setSkillsInput] = useState(
+    (initialValues?.skills || emptyProject.skills).join(', ')
+  );
 
   const endpoint = useMemo(
     () => (mode === 'create' ? '/api/projects' : `/api/projects/${initialValues._id}`),
@@ -216,8 +219,8 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
                     update(
                       'categories',
                       active
-                        ? form.categories.filter((item: string) => item !== category)
-                        : [...form.categories, category]
+                        ? (form.categories || []).filter((item: string) => item !== category)
+                        : [...(form.categories || []), category]
                     )
                   }
                   className={`rounded-full px-4 py-2 text-sm transition ${
@@ -249,16 +252,19 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
 
           <Field label="Skills">
             <input
-              value={(form.skills || []).join(', ')}
-              onChange={(e) =>
+              value={skillsInput}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSkillsInput(value);
+
                 update(
                   'skills',
-                  e.target.value
+                  value
                     .split(',')
                     .map((item) => item.trim())
                     .filter(Boolean)
-                )
-              }
+                );
+              }}
               placeholder="React, TypeScript, MongoDB"
               className={inputClassName}
             />

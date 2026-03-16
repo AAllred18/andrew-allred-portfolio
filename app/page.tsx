@@ -117,9 +117,11 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="order-1 flex items-center justify-center lg:order-2">
-            <div className="w-[85%] max-w-90 sm:max-w-105 lg:max-w-none">
-              <HeroArtTilt />
+          <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
+            <div className="mx-auto flex w-full justify-center sm:max-w-[420px] lg:max-w-none">
+              <div className="w-[85vw] max-w-[360px] sm:w-full">
+                <HeroArtTilt />
+              </div>
             </div>
           </div>
 

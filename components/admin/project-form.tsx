@@ -78,16 +78,27 @@ export function ProjectForm({ initialValues, mode }: ProjectFormProps) {
       published: form.status === 'published'
     };
 
-    const response = await fetch(endpoint, {
-      method: mode === 'create' ? 'POST' : 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    try {
+      const response = await fetch(endpoint, {
+        method: mode === 'create' ? 'POST' : 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    setSaving(false);
+      const data = await response.json().catch(() => null);
 
-    if (response.ok) {
+      if (!response.ok) {
+        console.error('Project save failed:', data);
+        alert(data?.error || 'Failed to save project.');
+        return;
+      }
+
       router.push('/admin');
+    } catch (error) {
+      console.error('Unexpected save error:', error);
+      alert('Something went wrong while saving the project.');
+    } finally {
+      setSaving(false);
     }
   }
 

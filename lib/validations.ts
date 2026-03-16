@@ -2,42 +2,56 @@ import { z } from 'zod';
 import { PROJECT_CATEGORIES } from './constants';
 
 export const linkSchema = z.object({
-  label: z.string().min(1),
-  url: z.string().url()
+  label: z.string().trim().optional().or(z.literal('')),
+  url: z.string().trim().optional().or(z.literal(''))
 });
 
+const imagePathSchema = z
+  .string()
+  .trim()
+  .refine((val) => val === '' || val.startsWith('/') || val.startsWith('http'), {
+    message: 'Must be a local path or valid URL'
+  });
+
 export const projectSchema = z.object({
-  title: z.string().min(2),
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/),
-  shortSummary: z.string().min(12),
-  fullDescription: z.string().min(40),
-  categories: z.array(z.enum(PROJECT_CATEGORIES)).min(1),
-  skills: z.array(z.string().min(1)).min(1),
-  role: z.string().min(2),
-  projectType: z.string().min(2),
-  timeline: z.string().optional().default(''),
-  featuredImage: z.string().refine(
-  (val) => val.startsWith('/') || val.startsWith('http'),
-  { message: 'Must be a local path or valid URL' }
-  ),
-  galleryImages: z.array(
-  z.string().refine(
-    (val) => val.startsWith('/') || val.startsWith('http'),
-    { message: 'Each gallery image must be a local path or valid URL' }
-  )
-  ).default([]),
-  outcomes: z.array(z.string().min(1)).default([]),
-  challenges: z.array(z.string().min(1)).default([]),
-  contributions: z.array(z.string().min(1)).default([]),
-  problem: z.string().min(10),
-  approach: z.string().min(10),
-  implementation: z.string().min(10),
-  features: z.array(z.string().min(1)).default([]),
-  results: z.string().min(10),
-  lessons: z.string().min(10),
+  title: z.string().trim().min(2, 'Title must be at least 2 characters'),
+  slug: z
+    .string()
+    .trim()
+    .min(2, 'Slug must be at least 2 characters')
+    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+
+  shortSummary: z.string().trim().optional().or(z.literal('')),
+  fullDescription: z.string().trim().optional().or(z.literal('')),
+
+  categories: z.array(z.enum(PROJECT_CATEGORIES)).default([]),
+  skills: z.array(z.string().trim().min(1)).default([]),
+
+  role: z.string().trim().optional().or(z.literal('')),
+  projectType: z.string().trim().optional().or(z.literal('')),
+  timeline: z.string().trim().optional().default(''),
+
+  featuredImage: imagePathSchema.optional().default(''),
+  galleryImages: z.array(imagePathSchema).default([]),
+
+  outcomes: z.array(z.string().trim().min(1)).default([]),
+  challenges: z.array(z.string().trim().min(1)).default([]),
+  contributions: z.array(z.string().trim().min(1)).default([]),
+
+  problem: z.string().trim().optional().or(z.literal('')),
+  approach: z.string().trim().optional().or(z.literal('')),
+  implementation: z.string().trim().optional().or(z.literal('')),
+
+  features: z.array(z.string().trim().min(1)).default([]),
+
+  results: z.string().trim().optional().or(z.literal('')),
+  lessons: z.string().trim().optional().or(z.literal('')),
+
   links: z.array(linkSchema).default([]),
+
   featured: z.boolean().default(false),
-  published: z.boolean().default(false)
+  published: z.boolean().default(false),
+  status: z.enum(['draft', 'in-progress', 'review', 'published']).default('draft')
 });
 
 export const contactSchema = z.object({

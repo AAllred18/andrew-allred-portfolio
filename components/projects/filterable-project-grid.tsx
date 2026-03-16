@@ -81,16 +81,16 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
               );
             })}
             <button
-              onClick={() => {
-                setSelected([...PROJECT_CATEGORIES]);
-                setQuery('');
-                setSort('Featured');
-                setCurrentPage(1);
-              }}
-              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium dark:border-slate-700"
-            >
-              Clear filters
-            </button>
+            onClick={() => {
+              setSelected([...PROJECT_CATEGORIES]);
+              setQuery('');
+              setSort('Featured');
+              setCurrentPage(1);
+            }}
+            className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium dark:border-slate-700"
+          >
+            Clear filters
+          </button>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">

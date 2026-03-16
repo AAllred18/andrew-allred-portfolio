@@ -117,10 +117,8 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
-            <div className="flex w-full justify-center lg:justify-end">
-              <HeroArtTilt />
-            </div>
+          <div className="order-1 flex w-full justify-center lg:order-2 lg:justify-end">
+            <HeroArtTilt />
           </div>
 
           {/* <div className="glass rounded-[2rem] p-6 shadow-xl">

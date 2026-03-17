@@ -36,28 +36,41 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="glass space-y-4 rounded-3xl p-6">
       <div className="grid gap-4 sm:grid-cols-2">
-        <input
-          name="name"
-          required
-          placeholder="Your name"
-          className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 outline-none dark:border-slate-700"
-        />
-        <input
-          name="email"
-          type="email"
-          required
-          placeholder="Email address"
-          className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 outline-none dark:border-slate-700"
-        />
+        <div>
+          <label htmlFor="name" className="sr-only">Name</label>
+          <input
+            id="name"
+            name="name"
+            required
+            placeholder="Your name"
+            className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 outline-none dark:border-slate-700"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email" className="sr-only">Email address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            placeholder="Email address"
+            className="rounded-2xl border border-slate-200 bg-transparent px-4 py-3 outline-none dark:border-slate-700"
+          />
+        </div>
       </div>
 
-      <textarea
-        name="message"
-        required
-        placeholder="Tell me what you're building or hiring for"
-        rows={6}
-        className="w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 outline-none dark:border-slate-700"
-      />
+      <div>
+        <label htmlFor="message" className="sr-only">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          required
+          placeholder="Tell me what you're building or hiring for"
+          rows={6}
+          className="w-full rounded-2xl border border-slate-200 bg-transparent px-4 py-3 outline-none dark:border-slate-700"
+        />
+      </div>
 
       <div className="flex items-center justify-between gap-4">
         <button

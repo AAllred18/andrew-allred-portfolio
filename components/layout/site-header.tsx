@@ -144,6 +144,7 @@ export function SiteHeader() {
             className="rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:-translate-y-0.5"
           >
             Resume
+            <span className="sr-only"> (PDF, opens in a new tab)</span>
           </Link>
         </nav>
 

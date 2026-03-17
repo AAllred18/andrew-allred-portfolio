@@ -105,7 +105,10 @@ export function FilterableProjectGrid({ projects }: { projects: any[] }) {
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <label className="glass flex items-center gap-2 rounded-full px-4 py-2">
+              <span className="sr-only">Search projects</span>
+
               <Search className="h-4 w-4 text-slate-400" />
+
               <input
                 className="w-full bg-transparent text-sm outline-none"
                 placeholder="Search projects"

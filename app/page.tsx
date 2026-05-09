@@ -100,7 +100,7 @@ export default async function HomePage() {
               Andrew "AJ" Allred
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-              BYU Information Systems student creating thoughtful products across development, UX, accessibility, and data-informed problem solving.
+              BYU Information Systems Alumni creating thoughtful products across development, UX, accessibility, and data-informed problem solving.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a href="#projects" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white dark:bg-white dark:text-slate-950">
@@ -142,7 +142,7 @@ export default async function HomePage() {
               <h2 className="section-title">About Me</h2>
               <p className="section-copy">
                 Growing up in Kealakekua shaped my curiosity and love for creating things that serve others. 
-                Today I study Information Systems and enjoy working across development, UX, and data to build products that are simple, useful, and thoughtfully designed. 
+                I enjoy working across development, AI, UX, and data to build products that are simple, useful, and thoughtfully designed. 
                 Outside of school and projects, I’m happily married to my wife Reagan, and we’re excited to be growing our family this summer.
               </p>
             </div>

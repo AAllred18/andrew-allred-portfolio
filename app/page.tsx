@@ -55,16 +55,23 @@ const skills = {
 
 const experience = [
   {
+    title: 'AI Onboarding Manager - Automotive',
+    company: 'Podium',
+    dates: 'May 2026 - Present',
+    summary:
+      'Help automotive dealerships engage with and embrace AI — integrating intelligent tools and automating workflows to drive efficiency across their business.'
+  },
+  {
     title: 'Information Systems Student',
     company: 'BYU Marriott School',
-    dates: 'September 2024 - Present',
+    dates: 'September 2024 - April 2026',
     summary:
       'Develop experience across full-stack development, UX design, data analysis, cybersecurity, and project management through academic product work, case studies, and real-world team projects.'
   },
   {
     title: 'Communications & Marketing Team Lead',
     company: 'BYU Sorensen Center',
-    dates: 'May 2024 - Present',
+    dates: 'May 2024 - May 2026',
     summary:
       'Lead web and digital projects across content, accessibility, and front-end experiences while coordinating execution with cross-functional teammates.'
   },
